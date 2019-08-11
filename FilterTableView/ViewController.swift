@@ -5,22 +5,20 @@
 //  Created by MB on 8/12/19.
 //  Copyright © 2019 MB. All rights reserved.
 //
-
+//https://www.youtube.com/watch?v=4RyhnwIRjpA
 import UIKit
 
-class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchResultsUpdating {
-    
-    
-    
+class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate {
+
     var array = ["One","Two","Three","Four","Five","Six","Seven","Eight"]
     var filteredArray = [String]()
+
     
-    
-    let resultViewController = UITableViewController()
-    
-    var searchController : UISearchController!
-    
-    
+    var searchBar: UISearchBar!{
+        didSet{
+            searchBar.delegate = self
+        }
+    }
     
     @IBOutlet weak var tableView: UITableView!{
         didSet{
@@ -28,48 +26,38 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
             tableView.dataSource = self
         }
     }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        searchController = UISearchController(searchResultsController: resultViewController)
-        searchController.searchResultsUpdater = self
-        
-        
-        resultViewController.tableView.dataSource = self
-        resultViewController.tableView.delegate = self
-        
-        tableView.tableHeaderView = searchController.searchBar
-        
+
+        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+        tableView?.tableHeaderView = searchBar
+        filteredArray = array
         
         
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == self.tableView{
-            return array.count
-        }
-        else{
+
             return filteredArray.count
-        }
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        if tableView == self.tableView{
-            cell.textLabel?.text = array[indexPath.row]
-        }
-        else{
+
             cell.textLabel?.text = filteredArray[indexPath.row]
-        }
+
         return cell
     }
     
     
-    func updateSearchResults(for searchController: UISearchController) {
-        filteredArray = array.filter {$0.contains(searchController.searchBar.text!)}
-        resultViewController.tableView.reloadData()
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard  !searchText.isEmpty else { filteredArray = array;  tableView.reloadData();       return}
+        filteredArray = array.filter {$0.lowercased().contains(searchText.lowercased())}
+        tableView.reloadData()
     }
-    
+
 }
 
