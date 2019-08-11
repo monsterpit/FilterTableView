@@ -4,8 +4,10 @@
 //
 //  Created by MB on 8/12/19.
 //  Copyright © 2019 MB. All rights reserved.
-//
+//https://www.youtube.com/watch?v=6KC1GdLnez0
+//rxcocoa tableview
 //https://www.youtube.com/watch?v=4RyhnwIRjpA
+
 import UIKit
 
 class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate {
