@@ -10,56 +10,71 @@
 
 import UIKit
 
-class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate {
+class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
-    var array = ["One","Two","Three","Four","Five","Six","Seven","Eight"]
+   // var array = ["One","Two","Three","Four","Five","Six","Seven","Eight"]
+    var array = [String]()
     var filteredArray = [String]()
 
+    var viewModel = ViewModel()
     
-    var searchBar: UISearchBar!{
-        didSet{
-            searchBar.delegate = self
-        }
-    }
+
     
     @IBOutlet weak var tableView: UITableView!{
         didSet{
             tableView.delegate = self
             tableView.dataSource = self
+            
         }
     }
     
+    @IBOutlet weak var textField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
-        tableView?.tableHeaderView = searchBar
-        filteredArray = array
+        viewModel.ViewModelDelegate = self
         
+        tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "TableViewCell")
         
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-            return filteredArray.count
+            return viewModel.items.count
 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-
-            cell.textLabel?.text = filteredArray[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell") as! TableViewCell
+        
+        cell.configure(withItemViewModel: viewModel.items[indexPath.row])
 
         return cell
     }
     
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard  !searchText.isEmpty else { filteredArray = array;  tableView.reloadData();       return}
-        filteredArray = array.filter {$0.lowercased().contains(searchText.lowercased())}
-        tableView.reloadData()
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        viewModel.items[indexPath.row].selectedItem()
+        
     }
 
+    @IBAction func addButtonPressed(_ sender: UIButton) {
+        viewModel.newItem = textField.text
+        viewModel.itemAdd()
+    }
+    
 }
+
+
+extension ViewController : ViewModelDelegate{
+    func todoitemAdded() {
+        textField.text = viewModel.newItem
+        tableView.beginUpdates()
+        tableView.insertRows(at: [IndexPath(item: viewModel.items.count - 1, section: 0)], with: .automatic)
+        tableView.endUpdates()
+    }
+}
+
+
 
