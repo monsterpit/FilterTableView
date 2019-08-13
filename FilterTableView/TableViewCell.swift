@@ -32,7 +32,7 @@ class TableViewCell: UITableViewCell {
      * @param itemViewModel
      * @return void
      */
-    func configure(withItemViewModel itemViewModel : ItemViewModel) -> (){
+    func configure(withItemViewModel itemViewModel : ItemPresentable) -> (){
         idLabel.text = itemViewModel.id
         textLbl.text = itemViewModel.textValue
     }
