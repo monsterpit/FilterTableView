@@ -14,6 +14,7 @@ import UIKit
 //receieve this value back from viewmodel to viewcontroller
 protocol TodoView : class{
     func addTodoItem()->()
+    func removeTodoItem(at index : Int) -> ()
 }
 
 class TodoViewController: UIViewController{
@@ -51,7 +52,11 @@ class TodoViewController: UIViewController{
     
     @IBAction func addButtonPressed(_ sender: UIButton) {
         viewModel?.newItem = textField.text
-        viewModel?.onAddTodoItem()
+        
+        DispatchQueue.global(qos: .background).async {
+            self.viewModel?.onAddTodoItem()
+        }
+        
     }
     
 }
@@ -78,6 +83,27 @@ extension TodoViewController : UITableViewDelegate,UITableViewDataSource {
         viewModel?.items[indexPath.row].onItemSelected()
         
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        
+        
+        let removeAction = UIContextualAction(style: .normal,
+                                              title: "remove",
+                                              handler: { (action, view,
+                                                success : (Bool) -> ()   //Called when someAction in Completed
+                                                ) in
+                                                
+                                                DispatchQueue.global(qos: .background).async {
+                                                    self.viewModel?.onItemRemove(todoItem: (self.viewModel?.items[indexPath.row].id))
+                                                }
+                                                
+                                                success(true)
+        })
+        removeAction.backgroundColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
+        return UISwipeActionsConfiguration(actions: [removeAction])
+    }
+    
 }
 
 //receieve this value back from viewmodel to viewcontroller
@@ -86,11 +112,22 @@ extension TodoViewController : TodoView{
         
         guard let items = viewModel?.items else{ print("Items are empty"); return }
         
-        tableView.beginUpdates()
-        tableView.insertRows(at: [IndexPath(item: items.count - 1, section: 0)], with: .automatic)
-        tableView.endUpdates()
-        
-        textField.text = viewModel?.newItem
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [IndexPath(item: items.count - 1, section: 0)], with: .automatic)
+            self.tableView.endUpdates()
+            
+            self.textField.text = self.viewModel?.newItem
+        }
+
+    }
+    
+    func removeTodoItem(at index : Int){
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.deleteRows(at: [IndexPath(item: index, section: 0)], with: .automatic)
+            self.tableView.endUpdates()
+        }
     }
     
     

@@ -56,6 +56,7 @@ extension ItemViewModel : TodoItemViewDelegate{
 
 protocol TodoViewDelegate{
     func onAddTodoItem() -> ()
+    func onItemRemove(todoItem : String?) -> ()
 }
 
 //for data binding
@@ -105,5 +106,19 @@ extension TodoViewModel : TodoViewDelegate{
         //has soon as item is added we are notifing the view that item is added
         self.view?.addTodoItem()
     }
+    
+    
+    func onItemRemove(todoItem: String?) {
+        
+        guard let todoItem = todoItem, let index = items.firstIndex(where: { $0.id == todoItem
+        }) else{ print("item for the index doesnt exist"); return}
+        
+        items.remove(at: index)
+        
+        //has soon as item is removed we are notifing the view that item is added
+        self.view?.removeTodoItem(at : index)
+        
+    }
+    
 }
 
