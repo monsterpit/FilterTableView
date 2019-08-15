@@ -50,7 +50,8 @@ class TodoViewController: UIViewController{
     
     
     @IBAction func addButtonPressed(_ sender: UIButton) {
-        viewModel?.onAddTodoItem(newValue : textField.text )
+        viewModel?.newItem = textField.text
+        viewModel?.onAddTodoItem()
     }
     
 }
@@ -89,7 +90,7 @@ extension TodoViewController : TodoView{
         tableView.insertRows(at: [IndexPath(item: items.count - 1, section: 0)], with: .automatic)
         tableView.endUpdates()
         
-        textField.text = ""
+        textField.text = viewModel?.newItem
     }
     
     

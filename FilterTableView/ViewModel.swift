@@ -38,13 +38,20 @@ class ItemViewModel : ItemPresentable{
 //Full ViewContrroller View Model i.e. tableView and button tap
 
 protocol TodoViewDelegate{
-    func onAddTodoItem(newValue : String?) -> ()
+    func onAddTodoItem() -> ()
+}
+
+//for data binding
+protocol TodoViewModelPresentable{
+    var newItem : String? {get}
 }
 
 
 
-
-class TodoViewModel  {
+class TodoViewModel : TodoViewModelPresentable  {
+    
+    
+    var newItem : String?
     
     //View's delegate weak reference
     weak var view : TodoView?
@@ -71,10 +78,12 @@ class TodoViewModel  {
 
 extension TodoViewModel : TodoViewDelegate{
     
-    func onAddTodoItem(newValue : String?) -> (){
-        guard let newItem = newValue  else{ return}
+    func onAddTodoItem() -> (){
+        guard let newItem = newItem ,newItem != "" else{ return}
         let item   = ItemViewModel(id: "\(items.count + 1)", textValue: newItem)
         items.append(item)
+        
+        self.newItem = ""
         
         //has soon as item is added we are notifing the view that item is added
         self.view?.addTodoItem()
