@@ -37,20 +37,24 @@ class ItemViewModel : ItemPresentable{
 //MARK:- VC
 //Full ViewContrroller View Model i.e. tableView and button tap
 
-protocol ViewModelDelegate{
-    func todoitemAdded() -> ()
+protocol TodoViewDelegate{
+    func onAddTodoItem(newValue : String?) -> ()
 }
 
 
-class ViewModel {
 
-    var ViewModelDelegate : ViewModelDelegate?
+
+class TodoViewModel  {
     
-    var newItem : String?
-    
+    //View's delegate weak reference
+    weak var view : TodoView?
+ 
     var items : [ItemViewModel] = []
     
-    init(){
+    //only having viewmodel if view is present
+    init(view: TodoView){
+        
+        self.view = view
         
         let item1   = ItemViewModel(id: "1", textValue: "Washroom")
         
@@ -62,15 +66,18 @@ class ViewModel {
         
     }
     
-    func itemAdd() {
-        guard let newItem = newItem  else{ return}
+    
+}
+
+extension TodoViewModel : TodoViewDelegate{
+    
+    func onAddTodoItem(newValue : String?) -> (){
+        guard let newItem = newValue  else{ return}
         let item   = ItemViewModel(id: "\(items.count + 1)", textValue: newItem)
         items.append(item)
-        self.newItem = ""
-        ViewModelDelegate?.todoitemAdded()
+        
+        //has soon as item is added we are notifing the view that item is added
+        self.view?.addTodoItem()
     }
-    
-
-
 }
 
