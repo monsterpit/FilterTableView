@@ -16,7 +16,12 @@ protocol ItemPresentable{
 }
 
 
-class ItemViewModel : ItemPresentable{
+protocol TodoItemViewDelegate {
+     func onItemSelected() -> ()
+}
+
+
+class ItemViewModel : ItemPresentable {
     var id: String?
     
     var textValue: String?
@@ -26,10 +31,22 @@ class ItemViewModel : ItemPresentable{
         self.textValue = textValue
         
     }
+
+}
+
+
+extension ItemViewModel : TodoItemViewDelegate{
     
-    func selectedItem(){
-        print("Selected ID is \(id!)")
+    /*!
+     * @discussion on item recieved in view model on didSelectRowAt
+     * @params Void
+     * @return Void
+     */
+    func onItemSelected() {
+         print("Selected ID is \(id!)")
     }
+    
+    
 }
 
 
