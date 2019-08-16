@@ -8,27 +8,105 @@
 
 import Foundation
 
+
+
+
+//MARK:- For Menu in Cell Items
+//Menu for Items (rows) of tableView
+protocol TodoMenuItemViewPresentable {
+    var title : String? {get}
+    var backgroundColor : String? {get}   //String it's better to avoid UIKit foundation elements
+    
+}
+
+protocol TodoMenuItemViewDelegate {
+    func onMenuItemSelected() -> ()
+
+}
+
+class TodoMenuItemViewModel : TodoMenuItemViewPresentable,TodoMenuItemViewDelegate {
+
+    var title: String?
+    
+    var backgroundColor: String?
+    
+    weak var parent : TodoItemViewDelegate?
+    
+    init(parentViewModel : TodoItemViewDelegate){
+        self.parent = parentViewModel
+    }
+    
+    func onMenuItemSelected() {
+        //Base class does not require an implementation
+    }
+
+}
+
+class RemoveMenuItemViewModel : TodoMenuItemViewModel{
+    
+    override func onMenuItemSelected() {
+        print("Remove Item Selected")
+        parent?.onRemoveMenuItemSelected()
+    }
+    
+}
+
+
+class DoneMenuItemViewModel : TodoMenuItemViewModel{
+    
+    override func onMenuItemSelected() {
+        print("Done Item Selected")
+        parent?.onDoneMenuItemSelected()
+    }
+    
+}
+
+
+
+
 //MARK:- Cell
 //View Model For Cell
 protocol ItemPresentable{
     var id : String? {get}
     var textValue : String? {get}
+    var menuItems : [TodoMenuItemViewPresentable]? {get}
 }
 
 
-protocol TodoItemViewDelegate {
-     func onItemSelected() -> ()
+protocol TodoItemViewDelegate : class{
+    func onItemSelected() -> ()
+    func onDoneMenuItemSelected() -> ()
+    func onRemoveMenuItemSelected() -> ()
 }
 
 
 class ItemViewModel : ItemPresentable {
+    
+    var menuItems: [TodoMenuItemViewPresentable]? = []
+    
     var id: String?
     
     var textValue: String?
     
-    init(id: String,textValue: String ){
+    weak var parent: TodoViewDelegate?
+    
+    init(id: String,textValue: String,parentViewModel : TodoViewDelegate ){
         self.id = id
         self.textValue = textValue
+        self.parent = parentViewModel
+        
+        let removeMenuItem = RemoveMenuItemViewModel(parentViewModel: self)
+        removeMenuItem.title = "Remove"
+        removeMenuItem.backgroundColor = "EC3C1A" //light red 
+        
+        let doneMenuItem = DoneMenuItemViewModel(parentViewModel: self)
+        doneMenuItem.title = "Done"
+        doneMenuItem.backgroundColor = "77C344" //light Green
+        
+        
+        menuItems?.append(removeMenuItem)
+        menuItems?.append(doneMenuItem)
+        
         
     }
 
@@ -46,6 +124,13 @@ extension ItemViewModel : TodoItemViewDelegate{
          print("Selected ID is \(id!)")
     }
     
+    func onDoneMenuItemSelected() {
+        parent?.onTodoItemDone(todoItemId: id!)
+    }
+    
+    func onRemoveMenuItemSelected() {
+        parent?.onItemRemove(todoItem: id!)
+    }
     
 }
 
@@ -54,9 +139,10 @@ extension ItemViewModel : TodoItemViewDelegate{
 //MARK:- VC
 //Full ViewContrroller View Model i.e. tableView and button tap
 
-protocol TodoViewDelegate{
+protocol TodoViewDelegate : class{
     func onAddTodoItem() -> ()
     func onItemRemove(todoItem : String?) -> ()
+    func onTodoItemDone(todoItemId : String?) -> ()
 }
 
 //for data binding
@@ -81,11 +167,11 @@ class TodoViewModel : TodoViewModelPresentable  {
         
         self.view = view
         
-        let item1   = ItemViewModel(id: "1", textValue: "Washroom")
+        let item1   = ItemViewModel(id: "1", textValue: "Washroom" , parentViewModel: self)
         
-        let item2  = ItemViewModel(id: "2", textValue: "bathRoom")
+        let item2  = ItemViewModel(id: "2", textValue: "bathRoom" , parentViewModel:  self)
         
-        let item3  = ItemViewModel(id: "3", textValue: "HellRoom")
+        let item3  = ItemViewModel(id: "3", textValue: "HellRoom" , parentViewModel: self)
         
         items.append(contentsOf: [item1,item2,item3])
         
@@ -98,7 +184,7 @@ extension TodoViewModel : TodoViewDelegate{
     
     func onAddTodoItem() -> (){
         guard let newItem = newItem ,newItem != "" else{ return}
-        let item   = ItemViewModel(id: "\(items.count + 1)", textValue: newItem)
+        let item   = ItemViewModel(id: "\(items.count + 1)", textValue: newItem, parentViewModel: self)
         items.append(item)
         
         self.newItem = ""
@@ -118,6 +204,10 @@ extension TodoViewModel : TodoViewDelegate{
         //has soon as item is removed we are notifing the view that item is added
         self.view?.removeTodoItem(at : index)
         
+    }
+    
+    func onTodoItemDone(todoItemId: String?) {
+        print("Todo Item done with id \(todoItemId)")
     }
     
 }

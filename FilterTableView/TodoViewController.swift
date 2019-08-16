@@ -86,22 +86,40 @@ extension TodoViewController : UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        let itemViewModel = viewModel?.items[indexPath.row]
+        
+        var menuActions : [UIContextualAction] = []
+        
+        _ = itemViewModel?.menuItems?.map{ menuItem in
+      
+            let menuAction = UIContextualAction(style: .normal,
+                                                  title: menuItem.title,
+                                                  handler: { (action, view,
+                                                    success : (Bool) -> ()   //Called when someAction in Completed
+                                                    ) in
+                                                    
+                                                    
+                                                    if let delegate = menuItem as? TodoMenuItemViewDelegate{
+                                                        
+                                                        DispatchQueue.global(qos: .background).async {
+                                                            
+                                                            delegate.onMenuItemSelected()
+                                                            
+                                                        }
+                                                        
+                                                    }
+ 
+                                                    success(true)
+            })
+            
+            
+            menuAction.backgroundColor = menuItem.backgroundColor?.hexColor
+            
+            menuActions.append(menuAction)
+        }
         
         
-        let removeAction = UIContextualAction(style: .normal,
-                                              title: "remove",
-                                              handler: { (action, view,
-                                                success : (Bool) -> ()   //Called when someAction in Completed
-                                                ) in
-                                                
-                                                DispatchQueue.global(qos: .background).async {
-                                                    self.viewModel?.onItemRemove(todoItem: (self.viewModel?.items[indexPath.row].id))
-                                                }
-                                                
-                                                success(true)
-        })
-        removeAction.backgroundColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
-        return UISwipeActionsConfiguration(actions: [removeAction])
+        return UISwipeActionsConfiguration(actions: menuActions)
     }
     
 }
