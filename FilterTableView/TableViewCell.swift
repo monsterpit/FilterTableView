@@ -34,7 +34,23 @@ class TableViewCell: UITableViewCell {
      */
     func configure(withItemViewModel itemViewModel : ItemPresentable) -> (){
         idLabel.text = itemViewModel.id
-        textLbl.text = itemViewModel.textValue
+        
+        let attributedText : NSMutableAttributedString = NSMutableAttributedString(string: itemViewModel.textValue!)
+        
+        if itemViewModel.isDone!{
+            
+            let range = NSRange(location: 0, length: attributedText.length)
+            
+            attributedText.addAttributes([NSAttributedString.Key.strikethroughColor : UIColor.red], range: range)
+            
+            attributedText.addAttributes([NSAttributedString.Key.strikethroughStyle : 1], range: range)
+            
+            attributedText.addAttributes([NSAttributedString.Key.foregroundColor : UIColor.blue], range: range)
+            
+        }
+        
+        
+        textLbl.attributedText = attributedText
     }
     
 }

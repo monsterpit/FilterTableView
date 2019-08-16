@@ -11,7 +11,7 @@ Viewmodel which will call service managers
 
 View ,ViewController 
 
-Delegate-> onAdd,OnRemove
+Delegate-> onAdd,OnRemove,OnDone
 view things that happens are put into “protocol” e.g. in viewController there was adding  and removing
 
 

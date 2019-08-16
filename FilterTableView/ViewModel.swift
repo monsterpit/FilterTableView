@@ -70,6 +70,7 @@ protocol ItemPresentable{
     var id : String? {get}
     var textValue : String? {get}
     var menuItems : [TodoMenuItemViewPresentable]? {get}
+    var isDone : Bool? {get set}
 }
 
 
@@ -81,6 +82,8 @@ protocol TodoItemViewDelegate : class{
 
 
 class ItemViewModel : ItemPresentable {
+    
+    var isDone : Bool? = false
     
     var menuItems: [TodoMenuItemViewPresentable]? = []
     
@@ -100,7 +103,7 @@ class ItemViewModel : ItemPresentable {
         removeMenuItem.backgroundColor = "EC3C1A" //light red 
         
         let doneMenuItem = DoneMenuItemViewModel(parentViewModel: self)
-        doneMenuItem.title = "Done"
+        doneMenuItem.title = isDone! ? "UnDone" : "Done"
         doneMenuItem.backgroundColor = "77C344" //light Green
         
         
@@ -129,7 +132,7 @@ extension ItemViewModel : TodoItemViewDelegate{
     }
     
     func onRemoveMenuItemSelected() {
-        parent?.onItemRemove(todoItem: id!)
+        parent?.onItemRemove(todoItemId: id!)
     }
     
 }
@@ -141,7 +144,7 @@ extension ItemViewModel : TodoItemViewDelegate{
 
 protocol TodoViewDelegate : class{
     func onAddTodoItem() -> ()
-    func onItemRemove(todoItem : String?) -> ()
+    func onItemRemove(todoItemId : String?) -> ()
     func onTodoItemDone(todoItemId : String?) -> ()
 }
 
@@ -194,9 +197,9 @@ extension TodoViewModel : TodoViewDelegate{
     }
     
     
-    func onItemRemove(todoItem: String?) {
+    func onItemRemove(todoItemId: String?) {
         
-        guard let todoItem = todoItem, let index = items.firstIndex(where: { $0.id == todoItem
+        guard let todoItemId = todoItemId, let index = items.firstIndex(where: { $0.id == todoItemId
         }) else{ print("item for the index doesnt exist"); return}
         
         items.remove(at: index)
@@ -207,7 +210,24 @@ extension TodoViewModel : TodoViewDelegate{
     }
     
     func onTodoItemDone(todoItemId: String?) {
-        print("Todo Item done with id \(todoItemId)")
+        
+        guard let todoItemId = todoItemId, let index = items.firstIndex(where: { $0.id == todoItemId
+        }) else{ print("item for the index doesnt exist"); return}
+        
+        let todoItem = items[index]
+        
+        todoItem.isDone!.toggle()
+        
+//        if let doneMenuItem = todoItem.menuItems?.filter({ (todoMenuItem) -> Bool in
+//            todoMenuItem is DoneMenuItemViewModel
+//        }).first{
+//            doneMenuItem.title = todoItem.isDone! ? "UnDone" : "Done"
+//        }
+        
+        
+        print("Todo Item done with id \(index)")
+        
+        self.view?.updateToDoItem(at: index)
     }
     
 }
