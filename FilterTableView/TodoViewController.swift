@@ -83,7 +83,7 @@ extension TodoViewController : UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        viewModel?.items[indexPath.row].onItemSelected()
+        (viewModel?.items[indexPath.row] as? TodoItemViewDelegate)?.onItemSelected()
         
     }
     
