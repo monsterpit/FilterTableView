@@ -3,7 +3,8 @@ View is basically just only  doing the work of displaying the data or doing an a
 All of the logic is being delegated to the viewmodel 
 Viewmodel which will call service managers
 
-
+//remote amend 
+// https://stackoverflow.com/questions/253055/how-do-i-push-amended-commit-to-the-remote-git-repository
 
 
 //Basic MVVM Pattern

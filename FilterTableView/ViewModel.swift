@@ -14,7 +14,7 @@ import Foundation
 //MARK:- For Menu in Cell Items
 //Menu for Items (rows) of tableView
 protocol TodoMenuItemViewPresentable {
-    var title : String? {get}
+    var title : String? {get set}
     var backgroundColor : String? {get}   //String it's better to avoid UIKit foundation elements
     
 }
@@ -218,16 +218,32 @@ extension TodoViewModel : TodoViewDelegate{
         
         todoItem.isDone!.toggle()
         
-//        if let doneMenuItem = todoItem.menuItems?.filter({ (todoMenuItem) -> Bool in
-//            todoMenuItem is DoneMenuItemViewModel
-//        }).first{
-//            doneMenuItem.title = todoItem.isDone! ? "UnDone" : "Done"
-//        }
+        if var doneMenuItem = todoItem.menuItems?.filter({ (todoMenuItem) -> Bool in
+            todoMenuItem is DoneMenuItemViewModel
+        }).first{
+            doneMenuItem.title = todoItem.isDone! ? "UnDone" : "Done"
+        }
+        
+        //MARK:- Sort Must See
+        self.items.sort{
+            
+             // 2,1    3,2 3,1    4,1 4,2 4,3
+            
+            if(!($0.isDone!) && !($1.isDone!)){
+                return $0.id! < $1.id!
+            }
+            else if(($0.isDone!) && ($1.isDone!)){
+                return $0.id! < $1.id!
+            }
+
+            return !($0.isDone!) && $1.isDone!
+            
+        }
         
         
         print("Todo Item done with id \(index)")
         
-        self.view?.updateToDoItem(at: index)
+        self.view?.reloadToDoItems()
     }
     
 }

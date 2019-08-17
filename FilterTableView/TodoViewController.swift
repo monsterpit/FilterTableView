@@ -16,6 +16,8 @@ protocol TodoView : class{
     func addTodoItem()->()
     func removeTodoItem(at index : Int) -> ()
     func updateToDoItem(at index : Int) -> ()
+    func reloadToDoItems() -> ()
+   
 }
 
 class TodoViewController: UIViewController{
@@ -155,7 +157,11 @@ extension TodoViewController : TodoView{
             self.tableView.reloadData()
         }
     }
-    
+    func reloadToDoItems(){
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
 }
 
 
