@@ -163,7 +163,7 @@ class TodoViewModel : TodoViewModelPresentable  {
     //View's delegate weak reference
     weak var view : TodoView?
  
-    var items : [ItemViewModel] = []
+    var items : [ItemPresentable] = []
     
     //only having viewmodel if view is present
     init(view: TodoView){
@@ -214,7 +214,7 @@ extension TodoViewModel : TodoViewDelegate{
         guard let todoItemId = todoItemId, let index = items.firstIndex(where: { $0.id == todoItemId
         }) else{ print("item for the index doesnt exist"); return}
         
-        let todoItem = items[index]
+        var todoItem = items[index]
         
         todoItem.isDone!.toggle()
         
