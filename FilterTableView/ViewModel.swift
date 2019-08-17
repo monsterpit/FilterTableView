@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import RxSwift
 
 
 
@@ -160,15 +160,13 @@ class TodoViewModel : TodoViewModelPresentable  {
     
     var newItem : String?
     
-    //View's delegate weak reference
-    weak var view : TodoView?
+
  
-    var items : [ItemPresentable] = []
+    //var items : [ItemPresentable]= []
+    var items : Variable<[ItemPresentable]> = Variable([])
     
     //only having viewmodel if view is present
-    init(view: TodoView){
-        
-        self.view = view
+    init(){
         
         let item1   = ItemViewModel(id: "1", textValue: "Washroom" , parentViewModel: self)
         
@@ -176,7 +174,8 @@ class TodoViewModel : TodoViewModelPresentable  {
         
         let item3  = ItemViewModel(id: "3", textValue: "HellRoom" , parentViewModel: self)
         
-        items.append(contentsOf: [item1,item2,item3])
+//        items.append(contentsOf: [item1,item2,item3])
+        items.value.append(contentsOf: [item1,item2,item3])
         
     }
     
@@ -187,34 +186,31 @@ extension TodoViewModel : TodoViewDelegate{
     
     func onAddTodoItem() -> (){
         guard let newItem = newItem ,newItem != "" else{ return}
-        let item   = ItemViewModel(id: "\(items.count + 1)", textValue: newItem, parentViewModel: self)
-        items.append(item)
+        let item   = ItemViewModel(id: "\(items.value.count + 1)", textValue: newItem, parentViewModel: self)
+        items.value.append(item)
         
         self.newItem = ""
         
-        //has soon as item is added we are notifing the view that item is added
-        self.view?.addTodoItem()
     }
     
     
     func onItemRemove(todoItemId: String?) {
         
-        guard let todoItemId = todoItemId, let index = items.firstIndex(where: { $0.id == todoItemId
+        guard let todoItemId = todoItemId, let index = items.value.firstIndex(where: { $0.id == todoItemId
         }) else{ print("item for the index doesnt exist"); return}
         
-        items.remove(at: index)
+        items.value.remove(at: index)
         
-        //has soon as item is removed we are notifing the view that item is added
-        self.view?.removeTodoItem(at : index)
+
         
     }
     
     func onTodoItemDone(todoItemId: String?) {
         
-        guard let todoItemId = todoItemId, let index = items.firstIndex(where: { $0.id == todoItemId
+        guard let todoItemId = todoItemId, let index = items.value.firstIndex(where: { $0.id == todoItemId
         }) else{ print("item for the index doesnt exist"); return}
         
-        var todoItem = items[index]
+        var todoItem = items.value[index]
         
         todoItem.isDone!.toggle()
         
@@ -225,7 +221,7 @@ extension TodoViewModel : TodoViewDelegate{
         }
         
         //MARK:- Sort Must See
-        self.items.sort{
+        self.items.value.sort{
             
              // 2,1    3,2 3,1    4,1 4,2 4,3
             
@@ -243,7 +239,7 @@ extension TodoViewModel : TodoViewDelegate{
         
         print("Todo Item done with id \(index)")
         
-        self.view?.reloadToDoItems()
+
     }
     
 }

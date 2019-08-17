@@ -9,16 +9,10 @@
 //https://www.youtube.com/watch?v=4RyhnwIRjpA
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 
-//receieve this value back from viewmodel to viewcontroller
-protocol TodoView : class{
-    func addTodoItem()->()
-    func removeTodoItem(at index : Int) -> ()
-    func updateToDoItem(at index : Int) -> ()
-    func reloadToDoItems() -> ()
-   
-}
 
 class TodoViewController: UIViewController{
     
@@ -28,13 +22,13 @@ class TodoViewController: UIViewController{
     
     var viewModel : TodoViewModel?
     
+    let identifier = "TableViewCell"
     
+    let disposeBag = DisposeBag()
     
     @IBOutlet weak var tableView: UITableView!{
         didSet{
-            tableView.delegate = self
-            tableView.dataSource = self
-            
+            tableView.delegate = self    
         }
     }
     
@@ -45,10 +39,16 @@ class TodoViewController: UIViewController{
         
         //  viewModel.ViewModelDelegate = self
         
-        tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "TableViewCell")
+        tableView.register(UINib(nibName: identifier, bundle: nil), forCellReuseIdentifier: identifier)
         
         //passing ViewControllere
-        viewModel = TodoViewModel(view : self)
+        viewModel = TodoViewModel()
+        
+
+        viewModel?.items.asObservable().bind(to: tableView.rx.items(cellIdentifier: identifier, cellType: TableViewCell.self)){index,item,cell in
+            cell.configure(withItemViewModel: item)
+            }.disposed(by: disposeBag)
+        
         
     }
     
@@ -65,31 +65,19 @@ class TodoViewController: UIViewController{
 }
 
 
-extension TodoViewController : UITableViewDelegate,UITableViewDataSource {
+extension TodoViewController : UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return (viewModel?.items.count)!
-        
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell") as! TableViewCell
-        
-        cell.configure(withItemViewModel: (viewModel?.items[indexPath.row])!)
-        
-        return cell
-    }
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        (viewModel?.items[indexPath.row] as? TodoItemViewDelegate)?.onItemSelected()
+        (viewModel?.items.value[indexPath.row] as? TodoItemViewDelegate)?.onItemSelected()
         
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let itemViewModel = viewModel?.items[indexPath.row]
+        let itemViewModel = viewModel?.items.value[indexPath.row]
         
         var menuActions : [UIContextualAction] = []
         
@@ -127,42 +115,7 @@ extension TodoViewController : UITableViewDelegate,UITableViewDataSource {
     
 }
 
-//receieve this value back from viewmodel to viewcontroller
-extension TodoViewController : TodoView{
-    func addTodoItem() {
-        
-        guard let items = viewModel?.items else{ print("Items are empty"); return }
-        
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [IndexPath(item: items.count - 1, section: 0)], with: .automatic)
-            self.tableView.endUpdates()
-            
-            self.textField.text = self.viewModel?.newItem
-        }
 
-    }
-    
-    func removeTodoItem(at index : Int){
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.deleteRows(at: [IndexPath(item: index, section: 0)], with: .automatic)
-            self.tableView.endUpdates()
-        }
-    }
-    
-    func updateToDoItem(at index : Int) {
-        DispatchQueue.main.async {
-          //  self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-            self.tableView.reloadData()
-        }
-    }
-    func reloadToDoItems(){
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-}
 
 
 
