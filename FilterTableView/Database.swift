@@ -50,7 +50,7 @@ class Database{
         let realm = try! Realm()
         
         //Returns all elements of type TodoItem stored in realm
-        let todoItemResults = realm.objects(TodoItem.self)
+        let todoItemResults = realm.objects(TodoItem.self).sorted(byKeyPath: "createdDate")
         
         return todoItemResults
     }
@@ -58,6 +58,7 @@ class Database{
     
     //realm deletes the row and then send Id of deleted Row so we dont have track of that row we just have its ID
     //to counter it we will have soft delete(tracking with variable then executing hard delete) and hard delete
+    //realm returns deletion 2 id spot where deletion occured and last position which got moved up
     //Hard delete
     func delete(primaryKey : Int) -> (Void){
         

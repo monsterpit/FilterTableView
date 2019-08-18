@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mZm-vC-KYy">
-                                <rect key="frame" x="0.0" y="120" width="375" height="547"/>
+                                <rect key="frame" x="0.0" y="122" width="375" height="545"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <sections/>
                             </tableView>
@@ -30,7 +30,8 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vS8-YL-6Af">
-                                <rect key="frame" x="164.5" y="82" width="46" height="30"/>
+                                <rect key="frame" x="131.5" y="82" width="112.5" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="addButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wtm-XK-2i6"/>
@@ -44,8 +45,9 @@
                             <constraint firstItem="dZw-uw-CVV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="9e5-qR-CfN"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dZw-uw-CVV" secondAttribute="trailing" constant="10" id="GeB-ii-4gI"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="mZm-vC-KYy" secondAttribute="bottom" id="L5l-Vw-tsv"/>
-                            <constraint firstItem="mZm-vC-KYy" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="PCc-Td-I35"/>
                             <constraint firstItem="dZw-uw-CVV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="a7S-du-Vya"/>
+                            <constraint firstItem="vS8-YL-6Af" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.3" id="gSn-bO-Vp0"/>
+                            <constraint firstItem="mZm-vC-KYy" firstAttribute="top" secondItem="vS8-YL-6Af" secondAttribute="bottom" constant="10" id="ibt-3V-QFc"/>
                             <constraint firstItem="dZw-uw-CVV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qWZ-GT-ror"/>
                             <constraint firstItem="mZm-vC-KYy" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="rpW-Au-w0t"/>
                             <constraint firstItem="vS8-YL-6Af" firstAttribute="top" secondItem="dZw-uw-CVV" secondAttribute="bottom" constant="22" id="xU9-CW-wgy"/>

@@ -64,7 +64,7 @@ Using SwiftyJSON we can abstract casting of datatype and catching of error
 //Using SwiftyJSON
 let data = JSON(data)
 
-if let todoArray = data.array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
+ if let todoArray = data["todo"].array  {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
 
 todoArray.forEach({ (todoItemDict) in
 

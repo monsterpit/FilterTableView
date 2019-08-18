@@ -151,12 +151,15 @@ protocol TodoViewDelegate : class{
 //for data binding
 protocol TodoViewModelPresentable{
     var newItem : String? {get}
+    var searchValue : Variable<String> {get}
 }
 
 
 import RealmSwift
 
 class TodoViewModel : TodoViewModelPresentable  {
+    
+    var searchValue: Variable<String> = Variable("")
     
     
     var newItem : String?
@@ -166,21 +169,60 @@ class TodoViewModel : TodoViewModelPresentable  {
     //var items : [ItemPresentable]= []
     var items : Variable<[ItemPresentable]> = Variable([])
     
+    var filteredItems : Variable<[ItemPresentable]> = Variable([])
+    
+    let disposeBag = DisposeBag()
     
     var database : Database?
     
     var notificationToken : NotificationToken? = nil
     
+    lazy var searchValueObservable : Observable<String> = self.searchValue.asObservable()
+    
+    lazy var itemsObservable : Observable<[ItemPresentable]> = self.items.asObservable()
+    
+    lazy var filteredItemsObservable : Observable<[ItemPresentable]> = self.filteredItems.asObservable()
 
     init(){
         
-        APIService.sharedInstance.fetchAllTodo { (data) in
+        fetchTodo()
+        
+        database = Database.singleton
+        
+        handleRealmNotifications()
+        
+        
+        searchValueObservable.subscribe(onNext: { (value) in
+            print("Search value received \(value)")
+            
+            self.itemsObservable.map(
+                {
+                    $0.filter(
+                        {
+                            //if value is empty return true that is dont filter out results
+                            if value.isEmpty {return true}
+                            return ($0.textValue?.lowercased().contains(value.lowercased()))!
+                        }
+                    )
+                    
+                }
+                ).bind(to: self.filteredItems)
+                .disposed(by: self.disposeBag)
+            
+        }).disposed(by: disposeBag)
+        
 
+    }
+    
+
+    fileprivate func fetchTodo() {
+        APIService.sharedInstance.fetchAllTodo { (data) in
+            
             
             //Using SwiftyJSON
             let data = JSON(data)
             
-            if let todoArray = data.array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
+            if let todoArray = data["todo"].array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
                 
                 todoArray.forEach({ (todoItemDict) in
                     
@@ -203,9 +245,9 @@ class TodoViewModel : TodoViewModelPresentable  {
             
             
         }
-        
-        database = Database.singleton
-        
+    }
+    
+    fileprivate func handleRealmNotifications() {
         let todoItemResults = database?.fetch()
         
         notificationToken = todoItemResults?._observe({ [weak self] (changes : RealmCollectionChange) in
@@ -271,7 +313,7 @@ class TodoViewModel : TodoViewModelPresentable  {
                         }
                     }
                 })
-
+                
                 break
             case .error(let error):
                 break
@@ -284,10 +326,10 @@ class TodoViewModel : TodoViewModelPresentable  {
                 // 2,1    3,2 3,1    4,1 4,2 4,3
                 
                 if(!($0.isDone!) && !($1.isDone!)){
-                    return $0.id! < $1.id!
+                    return Int($0.id!)! < Int($1.id!)!
                 }
                 else if(($0.isDone!) && ($1.isDone!)){
-                    return $0.id! < $1.id!
+                    return Int($0.id!)! < Int($1.id!)!
                 }
                 
                 return !($0.isDone!) && $1.isDone!
@@ -296,12 +338,12 @@ class TodoViewModel : TodoViewModelPresentable  {
             
             
         })
-        
     }
     
     deinit {
         notificationToken?.invalidate()
     }
+    
     
     
 }

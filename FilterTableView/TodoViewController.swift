@@ -26,9 +26,22 @@ class TodoViewController: UIViewController{
     
     let disposeBag = DisposeBag()
     
+    
+    lazy var searchController : UISearchController = {
+        let controller = UISearchController(searchResultsController: nil)
+        controller.dimsBackgroundDuringPresentation = false
+        controller.searchBar.sizeToFit()
+        controller.searchBar.barStyle = .default
+        controller.searchBar.tintColor = UIColor.black
+        controller.searchBar.backgroundColor = UIColor.clear
+        controller.searchBar.placeholder = "Search todos..."
+        return controller
+    }()
+    
     @IBOutlet weak var tableView: UITableView!{
         didSet{
-            tableView.delegate = self    
+            tableView.delegate = self
+            
         }
     }
     
@@ -45,10 +58,19 @@ class TodoViewController: UIViewController{
         viewModel = TodoViewModel()
         
 
-        viewModel?.items.asObservable().bind(to: tableView.rx.items(cellIdentifier: identifier, cellType: TableViewCell.self)){index,item,cell in
+        viewModel?.filteredItems.asObservable().bind(to: tableView.rx.items(cellIdentifier: identifier, cellType: TableViewCell.self)){index,item,cell in
             cell.configure(withItemViewModel: item)
             }.disposed(by: disposeBag)
         
+        let searchBar = searchController.searchBar
+        tableView.tableHeaderView = searchBar
+
+        searchBar.rx.text
+        .orEmpty
+        .distinctUntilChanged()
+        .debug()   //To listen to changes
+        .bind(to: (viewModel?.searchValue)!)
+        .disposed(by: disposeBag)
         
     }
     

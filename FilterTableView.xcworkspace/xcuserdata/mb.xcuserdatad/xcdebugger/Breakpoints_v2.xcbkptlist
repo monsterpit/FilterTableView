@@ -2,4 +2,54 @@
 <Bucket
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FilterTableView/ViewModel.swift"
+            timestampString = "587848429.37249"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
+            landmarkName = "handleRealmNotifications()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (RealmSwift.RealmCollectionChange&lt;RealmSwift.AnyRealmCollection&lt;FilterTableView.TodoItem&gt;&gt;) -&gt; () in FilterTableView.TodoViewModel.(handleRealmNotifications in _42BE64504BE4F2F7BC86E55512148D69)() -&gt; ()"
+                  moduleName = "FilterTableView"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mb/Desktop/Architecture/RxSwift/FilterTableView/FilterTableView/FilterTableView/ViewModel.swift"
+                  timestampString = "587848232.419278"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "258"
+                  endingLineNumber = "258"
+                  offsetFromSymbolStart = "214">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (FilterTableView.TodoItem) -&gt; () in closure #1 (RealmSwift.RealmCollectionChange&lt;RealmSwift.AnyRealmCollection&lt;FilterTableView.TodoItem&gt;&gt;) -&gt; () in FilterTableView.TodoViewModel.(handleRealmNotifications in _42BE64504BE4F2F7BC86E55512148D69)() -&gt; ()"
+                  moduleName = "FilterTableView"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mb/Desktop/Architecture/RxSwift/FilterTableView/FilterTableView/FilterTableView/ViewModel.swift"
+                  timestampString = "587848232.421325"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "253"
+                  endingLineNumber = "253"
+                  offsetFromSymbolStart = "33">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

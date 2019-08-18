@@ -13,30 +13,33 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="TableViewCell" customModule="FilterTableView" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHn-Cv-Wkq">
-                        <rect key="frame" x="26" y="11.5" width="42" height="21"/>
+                        <rect key="frame" x="26" y="12" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QBP-6D-JmR">
-                        <rect key="frame" x="139" y="11.5" width="42" height="21"/>
+                        <rect key="frame" x="139" y="12" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="nHn-Cv-Wkq" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="8gO-YD-PCE"/>
-                    <constraint firstItem="QBP-6D-JmR" firstAttribute="leading" secondItem="nHn-Cv-Wkq" secondAttribute="trailing" constant="71" id="Il7-6N-BdF"/>
-                    <constraint firstItem="QBP-6D-JmR" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="d10-cu-QRQ"/>
-                    <constraint firstItem="nHn-Cv-Wkq" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="eUz-j7-c1H"/>
+                    <constraint firstItem="nHn-Cv-Wkq" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="6Hl-Jb-XWg"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="QBP-6D-JmR" secondAttribute="bottom" constant="1" id="FeW-Y4-MvO"/>
+                    <constraint firstAttribute="trailingMargin" relation="lessThanOrEqual" secondItem="QBP-6D-JmR" secondAttribute="trailing" constant="123" id="J7w-1i-bAn"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="nHn-Cv-Wkq" secondAttribute="bottom" constant="1" id="NEH-rW-jkY"/>
+                    <constraint firstItem="QBP-6D-JmR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="1" id="U0d-Dm-TRG"/>
+                    <constraint firstItem="nHn-Cv-Wkq" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="1" id="a7K-3j-s6z"/>
+                    <constraint firstItem="QBP-6D-JmR" firstAttribute="leading" secondItem="nHn-Cv-Wkq" secondAttribute="trailing" constant="71" id="edG-R8-In1"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
