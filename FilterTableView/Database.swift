@@ -22,6 +22,12 @@ class Database{
         
         var todoId : Int? = 1
         
+        //Checking for duplicate values if any value isEmpty would be false
+        let isEmpty = realm.objects(TodoItem.self).filter{$0.todoValue.lowercased() == todoItemValue.lowercased()}.isEmpty
+        
+        if !isEmpty{return}
+        
+        
         //accessing last element in realm Object
         if let lastEntity = realm.objects(TodoItem.self).last{
             todoId = lastEntity.todoId + 1

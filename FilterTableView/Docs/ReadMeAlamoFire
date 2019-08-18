@@ -1,0 +1,27 @@
+
+Alamofire (same as AFnetworrking for Obj C)
+Supports retry policy , large file download and upload ,etc.
+
+Alamofire has integration with AlamoImage which can do image caching,cropping
+
+It has support for RxSwift to handle response from
+
+
+Alamofire has something called Routing ,using that we can create URLConvertible which will allow us to make URL type safe
+
+
+https://www.mockable.io/
+Rest api
+
+{
+"todo": [{"id" : 1,"value" : "Cleaning Utensils"},{"id" : 2,"value" : "Cleaning Cars"},{"id" : 3,"value" : "Cleaning Home"},{"id" : 4,"value" : "Reading Books"},{"id" : 5,"value" : "Booking Movie Tickets" }]
+}
+
+
+
+}
+
+})
+}
+
+}

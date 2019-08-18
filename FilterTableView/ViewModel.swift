@@ -8,7 +8,7 @@
 
 import Foundation
 import RxSwift
-
+import SwiftyJSON
 
 
 //MARK:- For Menu in Cell Items
@@ -174,6 +174,66 @@ class TodoViewModel : TodoViewModelPresentable  {
     //only having viewmodel if view is present
     init(){
         
+        APIService.sharedInstance.fetchAllTodo { (data) in
+           // print(data)
+            
+            
+            //Using JSONSerialization
+//            if let todoDict = try! JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]{
+//
+//                if let todoArray = todoDict["todo"] as? NSArray{
+//
+//                    todoArray.forEach({ (todoItemDict) in
+//
+//                        if let itemDict = todoItemDict as? [String : Any]{
+//
+////                            print(itemDict["id"])
+////
+////                            print(itemDict["value"])
+//
+//                            if let id = itemDict["id"] as? Int, let value = itemDict["value"] as? String{
+//
+//                                print("id is \(id) and value is \(value)")
+//
+//                                self.database?.createOrUpdate(todoItemValue: value)
+//
+//                            }
+//
+//                        }
+//
+//                    })
+//                }
+//
+//            }
+            
+            
+            //Using SwiftyJSON
+            let data = JSON(data)
+            
+            if let todoArray = data.array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
+                
+                todoArray.forEach({ (todoItemDict) in
+                    
+                    if let itemDict = todoItemDict.dictionary{
+                        
+                        if let id = itemDict["id"]?.int, let value = itemDict["value"]?.string{
+                            
+                            print("id is \(id) and value is \(value)")
+                            
+                            self.database?.createOrUpdate(todoItemValue: value)
+                            
+                        }
+                        
+                    }
+                    
+                })
+                
+            }
+            
+            
+            
+        }
+        
         database = Database.singleton
         
         let todoItemResults = database?.fetch()
@@ -292,7 +352,7 @@ extension TodoViewModel : TodoViewDelegate{
         
         database?.softDelete(primaryKey: Int(todoItemId!)!)
         
-        print("Todo Item delete with id \(index)")
+        print("Todo Item delete with id \(todoItemId)")
         
     }
     
@@ -300,7 +360,7 @@ extension TodoViewModel : TodoViewDelegate{
         
         database?.isDone(primaryKey: Int(todoItemId!)!)
 
-        print("Todo Item done with id \(index)")
+        print("Todo Item done with id \(todoItemId)")
         
 
     }

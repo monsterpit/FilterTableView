@@ -1,0 +1,85 @@
+
+
+{
+"todo": [{"id" : 1,"value" : "Cleaning Utensils"},{"id" : 2,"value" : "Cleaning Cars"},{"id" : 3,"value" : "Cleaning Home"},{"id" : 4,"value" : "Reading Books"},{"id" : 5,"value" : "Booking Movie Tickets" }]
+}
+
+
+
+
+if let todoDict = try! JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]{
+
+if let todoArray = todoDict["todo"] as? NSArray{
+
+todoArray.forEach({ (todoItemDict) in
+
+if let itemDict = todoItemDict as? [String : Any]{
+
+//                            print(itemDict["id"])
+//
+//                            print(itemDict["value"])
+
+if let id = itemDict["id"] as? Int, let value = itemDict["value"] as? String{
+
+print("id is \(id) and value is \(value)")
+
+self.database?.createOrUpdate(todoItemValue: value)
+
+}
+
+
+Using SwiftyJSON we can abstract casting of datatype and catching of error
+
+
+
+//Using JSONSerialization
+//            if let todoDict = try! JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]{
+//
+//                if let todoArray = todoDict["todo"] as? NSArray{
+//
+//                    todoArray.forEach({ (todoItemDict) in
+//
+//                        if let itemDict = todoItemDict as? [String : Any]{
+//
+////                            print(itemDict["id"])
+////
+////                            print(itemDict["value"])
+//
+//                            if let id = itemDict["id"] as? Int, let value = itemDict["value"] as? String{
+//
+//                                print("id is \(id) and value is \(value)")
+//
+//                                self.database?.createOrUpdate(todoItemValue: value)
+//
+//                            }
+//
+//                        }
+//
+//                    })
+//                }
+//
+//            }
+
+
+//Using SwiftyJSON
+let data = JSON(data)
+
+if let todoArray = data.array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
+
+todoArray.forEach({ (todoItemDict) in
+
+if let itemDict = todoItemDict.dictionary{
+
+if let id = itemDict["id"]?.int, let value = itemDict["value"]?.string{
+
+print("id is \(id) and value is \(value)")
+
+self.database?.createOrUpdate(todoItemValue: value)
+
+}
+
+}
+
+})
+
+}
