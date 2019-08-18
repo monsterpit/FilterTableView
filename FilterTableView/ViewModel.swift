@@ -154,6 +154,7 @@ protocol TodoViewModelPresentable{
 }
 
 
+import RealmSwift
 
 class TodoViewModel : TodoViewModelPresentable  {
     
@@ -165,18 +166,111 @@ class TodoViewModel : TodoViewModelPresentable  {
     //var items : [ItemPresentable]= []
     var items : Variable<[ItemPresentable]> = Variable([])
     
+    
+    var database : Database?
+    
+    var notificationToken : NotificationToken? = nil
+    
     //only having viewmodel if view is present
     init(){
         
-        let item1   = ItemViewModel(id: "1", textValue: "Washroom" , parentViewModel: self)
+        database = Database.singleton
         
-        let item2  = ItemViewModel(id: "2", textValue: "bathRoom" , parentViewModel:  self)
+        let todoItemResults = database?.fetch()
         
-        let item3  = ItemViewModel(id: "3", textValue: "HellRoom" , parentViewModel: self)
+        notificationToken = todoItemResults?._observe({ [weak self] (changes : RealmCollectionChange) in
+            
+            switch(changes){
+            case .initial:  //listening to all the existing records
+                
+                todoItemResults?.forEach({ (todoItemEntity) in
+                    
+                    let itemIndex = todoItemEntity.todoId
+                    let itemValue = todoItemEntity.todoValue
+                    
+                    
+                    let item   = ItemViewModel(id: "\(itemIndex)", textValue: itemValue, parentViewModel: self!)
+                    item.isDone = todoItemEntity.isDone
+                    self?.items.value.append(item)
+                    
+                    
+                })
+                
+                break
+            case .update(_,let deletions,let insertions,let modifications ):  //listening to all the updates like delete,insert,update  [Int] returns array of indexs
+                
+                insertions.forEach({ (index) in
+                    
+                    let todoItemEntity = todoItemResults![index]
+                    
+                    let itemIndex = todoItemEntity.todoId
+                    let itemValue = todoItemEntity.todoValue
+                    
+                    
+                    let item   = ItemViewModel(id: "\(itemIndex)", textValue: itemValue, parentViewModel: self!)
+                    self?.items.value.append(item)
+                    
+                })
+                
+                modifications.forEach({ (index) in
+                    
+                    let todoItemEntity = todoItemResults![index]
+                    
+                    guard  let index = self?.items.value.firstIndex(where: { Int($0.id!) == todoItemEntity.todoId
+                    }) else{ print("item for the index doesnt exist"); return}
+                    
+                    //For Deletion
+                    if todoItemEntity.isdeleted == true{
+                        
+                        self?.items.value.remove(at: index)
+                        
+                        self?.database?.delete(primaryKey: todoItemEntity.todoId)
+                        
+                    }
+                        //For Modifications / Updates
+                    else{
+                        
+                        var todoItem = self?.items.value[index]
+                        
+                        todoItem?.isDone!.toggle()
+                        
+                        if var doneMenuItem = todoItem?.menuItems?.filter({ (todoMenuItem) -> Bool in
+                            todoMenuItem is DoneMenuItemViewModel
+                        }).first{
+                            doneMenuItem.title = todoItemEntity.isDone ? "UnDone" : "Done"
+                        }
+                    }
+                })
+
+                break
+            case .error(let error):
+                break
+                
+            }
+            
+            //MARK:- Sort Must See
+            self?.items.value.sort{
+                
+                // 2,1    3,2 3,1    4,1 4,2 4,3
+                
+                if(!($0.isDone!) && !($1.isDone!)){
+                    return $0.id! < $1.id!
+                }
+                else if(($0.isDone!) && ($1.isDone!)){
+                    return $0.id! < $1.id!
+                }
+                
+                return !($0.isDone!) && $1.isDone!
+                
+            }
+            
+            
+        })
         
-//        items.append(contentsOf: [item1,item2,item3])
-        items.value.append(contentsOf: [item1,item2,item3])
-        
+    }
+    
+    deinit {
+        notificationToken?.invalidate()
     }
     
     
@@ -186,8 +280,8 @@ extension TodoViewModel : TodoViewDelegate{
     
     func onAddTodoItem() -> (){
         guard let newItem = newItem ,newItem != "" else{ return}
-        let item   = ItemViewModel(id: "\(items.value.count + 1)", textValue: newItem, parentViewModel: self)
-        items.value.append(item)
+
+        database?.createOrUpdate(todoItemValue: newItem)
         
         self.newItem = ""
         
@@ -196,47 +290,16 @@ extension TodoViewModel : TodoViewDelegate{
     
     func onItemRemove(todoItemId: String?) {
         
-        guard let todoItemId = todoItemId, let index = items.value.firstIndex(where: { $0.id == todoItemId
-        }) else{ print("item for the index doesnt exist"); return}
+        database?.softDelete(primaryKey: Int(todoItemId!)!)
         
-        items.value.remove(at: index)
-        
-
+        print("Todo Item delete with id \(index)")
         
     }
     
     func onTodoItemDone(todoItemId: String?) {
         
-        guard let todoItemId = todoItemId, let index = items.value.firstIndex(where: { $0.id == todoItemId
-        }) else{ print("item for the index doesnt exist"); return}
-        
-        var todoItem = items.value[index]
-        
-        todoItem.isDone!.toggle()
-        
-        if var doneMenuItem = todoItem.menuItems?.filter({ (todoMenuItem) -> Bool in
-            todoMenuItem is DoneMenuItemViewModel
-        }).first{
-            doneMenuItem.title = todoItem.isDone! ? "UnDone" : "Done"
-        }
-        
-        //MARK:- Sort Must See
-        self.items.value.sort{
-            
-             // 2,1    3,2 3,1    4,1 4,2 4,3
-            
-            if(!($0.isDone!) && !($1.isDone!)){
-                return $0.id! < $1.id!
-            }
-            else if(($0.isDone!) && ($1.isDone!)){
-                return $0.id! < $1.id!
-            }
+        database?.isDone(primaryKey: Int(todoItemId!)!)
 
-            return !($0.isDone!) && $1.isDone!
-            
-        }
-        
-        
         print("Todo Item done with id \(index)")
         
 

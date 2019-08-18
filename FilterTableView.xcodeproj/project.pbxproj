@@ -15,6 +15,8 @@
 		2C2F9FA82308810F0045F7CC /* Reactive programming RxTests.docx in Resources */ = {isa = PBXBuildFile; fileRef = 2C2F9FA72308810F0045F7CC /* Reactive programming RxTests.docx */; };
 		2C2F9FAA230881610045F7CC /* Rx reactive programming.docx in Resources */ = {isa = PBXBuildFile; fileRef = 2C2F9FA9230881610045F7CC /* Rx reactive programming.docx */; };
 		2C2F9FAC2308836E0045F7CC /* ReadMeRxSwift.md in Resources */ = {isa = PBXBuildFile; fileRef = 2C2F9FAB2308836E0045F7CC /* ReadMeRxSwift.md */; };
+		2C2F9FAE230899DB0045F7CC /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2F9FAD230899DB0045F7CC /* Database.swift */; };
+		2C2F9FB023089C3B0045F7CC /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2F9FAF23089C3B0045F7CC /* TodoItem.swift */; };
 		2C6361D32301EE2C00D737B5 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6361D22301EE2C00D737B5 /* ViewModel.swift */; };
 		2C6361D52301EE8E00D737B5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6361D42301EE8E00D737B5 /* Model.swift */; };
 		2C6361D82301F22200D737B5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6361D62301F22200D737B5 /* TableViewCell.swift */; };
@@ -35,6 +37,8 @@
 		2C2F9FA72308810F0045F7CC /* Reactive programming RxTests.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Reactive programming RxTests.docx"; sourceTree = "<group>"; };
 		2C2F9FA9230881610045F7CC /* Rx reactive programming.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rx reactive programming.docx"; sourceTree = "<group>"; };
 		2C2F9FAB2308836E0045F7CC /* ReadMeRxSwift.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadMeRxSwift.md; sourceTree = "<group>"; };
+		2C2F9FAD230899DB0045F7CC /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		2C2F9FAF23089C3B0045F7CC /* TodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
 		2C6361D22301EE2C00D737B5 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		2C6361D42301EE8E00D737B5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		2C6361D62301F22200D737B5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
@@ -91,6 +95,8 @@
 				2C0B5DB12300B752003BDDAE /* Info.plist */,
 				2C2F9FA6230880FE0045F7CC /* Docs */,
 				2CC1F7452308576200C70386 /* Extensions */,
+				2C2F9FAD230899DB0045F7CC /* Database.swift */,
+				2C2F9FAF23089C3B0045F7CC /* TodoItem.swift */,
 			);
 			path = FilterTableView;
 			sourceTree = "<group>";
@@ -236,6 +242,8 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FilterTableView/Pods-FilterTableView-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 			);
@@ -243,6 +251,8 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 			);
@@ -263,6 +273,8 @@
 				2C0B5DA82300B74E003BDDAE /* TodoViewController.swift in Sources */,
 				2C6361D32301EE2C00D737B5 /* ViewModel.swift in Sources */,
 				2C6361D52301EE8E00D737B5 /* Model.swift in Sources */,
+				2C2F9FAE230899DB0045F7CC /* Database.swift in Sources */,
+				2C2F9FB023089C3B0045F7CC /* TodoItem.swift in Sources */,
 				2C0B5DA62300B74E003BDDAE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
