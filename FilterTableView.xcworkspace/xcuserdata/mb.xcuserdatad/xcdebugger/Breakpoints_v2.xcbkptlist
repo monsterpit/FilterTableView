@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FilterTableView/ViewModel.swift"
-            timestampString = "587848429.37249"
+            timestampString = "587855432.306855"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
+            startingLineNumber = "297"
+            endingLineNumber = "297"
             landmarkName = "handleRealmNotifications()"
             landmarkType = "7">
             <Locations>

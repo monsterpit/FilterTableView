@@ -17,6 +17,11 @@ Subject(Simply means when a value is changed in that array you can subscribe to 
 
 DisposeBag easily let's you handle memory management around Rx
 
+Whenever a Observable encounters an error it will stop sending signals and it will dispose off the observable , that is taken care by RxSwift
+
+onCompleted() So that observable gets disposed off   //if not called this might not get collected or disposed off 
+But if you expecting multiple responses dont call this
+
 
 
 Changes in RxSwift
@@ -46,3 +51,20 @@ cellForRowAt , NumberOfSections
 
 we wont even require response callback from it i.e.
 Protocols of Views like adding,reload,update,removing , in turn wont require to pass VC weak reference to ViewModel and could remove callbacks from ViewModel to ViewController
+
+
+
+
+
+
+
+
+Creating a Observable
+
+Observable.create { (observer) -> Disposable in
+
+return Disposables.create {
+<#code#>
+}
+
+}

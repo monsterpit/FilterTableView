@@ -216,35 +216,75 @@ class TodoViewModel : TodoViewModelPresentable  {
     
 
     fileprivate func fetchTodo() {
-        APIService.sharedInstance.fetchAllTodo { (data) in
-            
-            
-            //Using SwiftyJSON
-            let data = JSON(data)
-            
-            if let todoArray = data["todo"].array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
+        
+        let jsonObserable = APIService.sharedInstance.fetchAllTodo()
+        
+        
+        jsonObserable.subscribe(
+            onNext: { (jsonResponse) in
+            print("jsonResponse \(jsonResponse)")
                 
-                todoArray.forEach({ (todoItemDict) in
+                if let todoArray = jsonResponse["todo"].array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
                     
-                    if let itemDict = todoItemDict.dictionary{
+                    todoArray.forEach({ (todoItemDict) in
                         
-                        if let id = itemDict["id"]?.int, let value = itemDict["value"]?.string{
+                        if let itemDict = todoItemDict.dictionary{
                             
-                            print("id is \(id) and value is \(value)")
-                            
-                            self.database?.createOrUpdate(todoItemValue: value)
+                            if let id = itemDict["id"]?.int, let value = itemDict["value"]?.string{
+                                
+                                print("id is \(id) and value is \(value)")
+                                
+                                self.database?.createOrUpdate(todoItemValue: value)
+                                
+                            }
                             
                         }
                         
-                    }
+                    })
                     
-                })
+                }
                 
-            }
-            
-            
-            
-        }
+                
+        },
+                                onError: { (error) in
+                                    print("Todo request failed with an error \(error)")
+        },
+                                onCompleted: {
+                                    print("Todo Request completed")
+        },
+                                onDisposed: {
+                                    print("Todo Request disposed")
+        }).disposed(by: disposeBag)
+        
+//        APIService.sharedInstance.fetchAllTodo { (data) in
+//
+//
+//            //Using SwiftyJSON
+//            let data = JSON(data)
+//
+//            if let todoArray = data["todo"].array {//.array for optional ,.arrayValue for explicitly unwrapped array, .arrayObject for [Any]?
+//
+//                todoArray.forEach({ (todoItemDict) in
+//
+//                    if let itemDict = todoItemDict.dictionary{
+//
+//                        if let id = itemDict["id"]?.int, let value = itemDict["value"]?.string{
+//
+//                            print("id is \(id) and value is \(value)")
+//
+//                            self.database?.createOrUpdate(todoItemValue: value)
+//
+//                        }
+//
+//                    }
+//
+//                })
+//
+//            }
+//
+//
+//
+//        }
     }
     
     fileprivate func handleRealmNotifications() {

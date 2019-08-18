@@ -8,13 +8,15 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
+import RxSwift
 
 protocol APIServiceProtocol{
     
     associatedtype ResponseData
     
-    func fetchAllTodo(completion : @escaping (ResponseData)-> ()) -> ()
-    
+   // func fetchAllTodo(completion : @escaping (ResponseData)-> ()) -> ()
+    func fetchAllTodo() -> (ResponseData)
 }
 
 
@@ -24,21 +26,60 @@ class APIService : APIServiceProtocol{
     
     private init(){}
     
-    typealias ResponseData = Data
+    typealias ResponseData = Observable<JSON>
     
-    func fetchAllTodo(completion: @escaping (Data) -> ()) {
+    func fetchAllTodo() ->  Observable<JSON>{
         
         let url = URL(string: "http://demo9457057.mockable.io/")!
         
-        Alamofire.request(url).responseJSON { (response) in
+
+       return Observable.create { (observer) -> Disposable in
             
-            print(response.request)
-            print(response.response?.statusCode)
+        let request = Alamofire.request(url).responseJSON { (response) in
             
-            completion(response.data!)
+            //            print(response.request)
+            //            print(response.response?.statusCode)
+            //
+            //            completion(response.data!)
+            
+            
+            
+            switch response.result{
+                
+            case .success(let value):
+                if let statusCode = response.response?.statusCode, statusCode == 200{
+                    
+                    let responseJSON = JSON(value)
+                    
+                    observer.onNext(responseJSON)
+                    
+                    observer.onCompleted()
+                    
+                }
+                else{
+                    print("This is not expected Response")
+                    
+                    observer.onError(NSError(domain: "Mockable", code: -1, userInfo: nil))
+                }
+                
+                
+            case .failure(let error):
+                print(error)
+                observer.onError(error)
+                
+            }
             
         }
         
+            return Disposables.create {
+                //if there is a problem with API we can call request and cancel the request
+                request.cancel()
+            }
+            
+        }
+        
+
+    
     }
     
     
