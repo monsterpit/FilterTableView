@@ -5,8 +5,7 @@
 //  Created by MB on 8/18/19.
 //  Copyright © 2019 MB. All rights reserved.
 //
-//Realm doesnt have autoincrement
-//Realm provides a notificationToken to listen to any changes like insert or even an intial load , delete , update whatever happens get to that particular collections(ResultSet) and whatever happens to Resultset we will get an notification for that
+
 import RealmSwift
 
 class Database{
@@ -15,7 +14,7 @@ class Database{
     
     private init(){}
     
-    //Not creates a new instance but ideally it uses default realm instances always
+
     func createOrUpdate(todoItemValue : String)-> Void{
         
         let realm = try! Realm()

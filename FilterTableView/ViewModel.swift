@@ -171,41 +171,11 @@ class TodoViewModel : TodoViewModelPresentable  {
     
     var notificationToken : NotificationToken? = nil
     
-    //only having viewmodel if view is present
+
     init(){
         
         APIService.sharedInstance.fetchAllTodo { (data) in
-           // print(data)
-            
-            
-            //Using JSONSerialization
-//            if let todoDict = try! JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]{
-//
-//                if let todoArray = todoDict["todo"] as? NSArray{
-//
-//                    todoArray.forEach({ (todoItemDict) in
-//
-//                        if let itemDict = todoItemDict as? [String : Any]{
-//
-////                            print(itemDict["id"])
-////
-////                            print(itemDict["value"])
-//
-//                            if let id = itemDict["id"] as? Int, let value = itemDict["value"] as? String{
-//
-//                                print("id is \(id) and value is \(value)")
-//
-//                                self.database?.createOrUpdate(todoItemValue: value)
-//
-//                            }
-//
-//                        }
-//
-//                    })
-//                }
-//
-//            }
-            
+
             
             //Using SwiftyJSON
             let data = JSON(data)
